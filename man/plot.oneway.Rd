@@ -11,6 +11,9 @@
 
 \item{...}{additional arguments passed to boxplot function}
 }
+\value{
+ggplot2 graph
+}
 \description{
 plot.oneway creates group comparisons for a one-way ANOVA
 }

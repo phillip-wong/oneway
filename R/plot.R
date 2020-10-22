@@ -4,9 +4,10 @@
 #'
 #' @param x an object of class oneway.
 #' @param ... additional arguments passed to boxplot function
+#' @import ggplot2
 #'
 #' @export
-#' @return NULL
+#' @return ggplot2 graph
 #' @examples
 #' # mileage <- oneway(mpg ~ cyl, mtcars)
 #' plot(mileage)
@@ -14,5 +15,10 @@ plot.oneway <- function(x, ...){
   if(!inherits(x, "oneway")){
     stop("Must be class 'oneway'")
   }
-  boxplot(x$anova$terms, x$anova$model, ...)
+  g <- as.character(x$anova$terms[[3]]) # "cyl"
+  y <- as.character(x$anova$terms[[2]]) # "mpg"
+  ggplot(x$anova$model, aes(x = factor(.data[[g]]), y = .data[[y]], fill = factor(.data[[g]]))) +
+    geom_boxplot(...) +
+    labs(x = g, y = y) +
+    theme(legend.position = 'none')
 }

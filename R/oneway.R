@@ -5,6 +5,7 @@
 #' @param formula an object of class formula, relating the
 #' dependent variable to the grouping variable.
 #' @param data a data frame containing the variables in the model.
+#' @import dplyr
 #'
 #' @export
 #'
@@ -19,10 +20,18 @@ oneway <- function(formula, data){
   fit <- lm(formula, data)
 
   # summary statistics
-  stats <- aggregate(formula, data,
-                     function(x) {c(n=length(x),
-                                   mean = mean(x),
-                                   sd = sd(x))})
+  # stats <- aggregate(formula, data,
+  #                    function(x) {c(n=length(x),
+  #                                  mean = mean(x),
+  #                                  sd = sd(x))})
+  group <- as.character(formula[[3]])
+  y <- as.character(formula[[2]])
+  stats <- data %>%
+    group_by(.data[[group]]) %>%
+    summarise(n = n(),
+              mean = mean(.data[[y]]),
+              sd = sd(.data[[y]])) %>%
+    as.data.frame()
 
   # return results
   result <- list(anova = fit, summarystats = stats)
